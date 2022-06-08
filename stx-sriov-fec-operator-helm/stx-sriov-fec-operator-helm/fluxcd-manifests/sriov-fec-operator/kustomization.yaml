@@ -1,0 +1,18 @@
+#
+# Copyright (c) 2022 Intel Corporation
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+namespace: sriov-fec-system
+resources:
+  - helmrelease.yaml
+secretGenerator:
+  - name: sriov-fec-operator-static-overrides
+    files:
+      - sriov-fec-operator-static-overrides.yaml
+  - name: sriov-fec-operator-system-overrides
+    files:
+      - sriov-fec-operator-system-overrides.yaml
+generatorOptions:
+  disableNameSuffixHash: true
