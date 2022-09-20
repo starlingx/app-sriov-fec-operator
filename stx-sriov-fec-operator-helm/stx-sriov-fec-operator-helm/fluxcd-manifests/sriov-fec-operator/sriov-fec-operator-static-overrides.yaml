@@ -8,20 +8,23 @@ imagePullSecrets: [{"name": "default-registry-key"}]
 
 images:
   tags:
-    sriov-fec-operator: sriov-fec/sriov-fec-operator:v2.1.1
-    sriov-fec-labeler: sriov-fec/sriov-fec-labeler:v2.1.1
-    sriov-fec-daemon: sriov-fec/sriov-fec-daemon:v2.1.1
+    sriov-fec-labeler: starlingx/sriov-fec-labeler:stx.8.0-v2.1.1-1
+    sriov-fec-daemon: starlingx/sriov-fec-daemon:stx.8.0-v2.1.1-1
 
-sriovNetworkDevicePlugin:
-image:
-  digest: "f717f9778f48665b7c592f2225df51b755a1fe048125e034a286c564ee10fd37"
-  repository: ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin
-  pullPolicy: IfNotPresent
-  tag: v3.5.1
+manager:
+  image:
+    repository: docker.io/starlingx/sriov-fec-operator
+    tag: stx.8.0-v2.1.1-1
 
 kubeRbacProxy:
+  name: kube-rbac-proxy
   image:
-    digest: "0df4ae70e3bd0feffcec8f5cdb428f4abe666b667af991269ec5cb0bbda65869"
     repository: gcr.io/kubebuilder/kube-rbac-proxy
-    pullPolicy: IfNotPresent
     tag: v0.11.0
+
+sriovNetworkDevicePlugin:
+  image:
+    digest: "f717f9778f48665b7c592f2225df51b755a1fe048125e034a286c564ee10fd37"
+    repository: ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin
+    tag: v3.5.1
+    pullPolicy: IfNotPresent
