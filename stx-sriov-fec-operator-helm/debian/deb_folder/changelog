@@ -1,0 +1,5 @@
+stx-sriov-fec-operator-helm (1.0-1) unstable; urgency=medium
+
+  * Initial release.
+
+ --  Nidhi Shivashankara Belur <nidhi.shivashankara.belur@intel.com>  Sun, 18 Sep 2022 08:52:11 +0000
