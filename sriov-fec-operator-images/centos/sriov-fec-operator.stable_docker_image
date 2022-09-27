@@ -2,6 +2,7 @@ BUILDER=script
 LABEL=sriov-fec-operator
 SOURCE_REPO=https://github.com/smart-edge-open/sriov-fec-operator.git
 SOURCE_REF=0293536cd6712d8f650e18191f3a4d1579f8f633
+SOURCE_PATCHES="../files/0001-Add-ImagePullSecrets-to-serviceaccounts.patch"
 COMMAND=bash
 SCRIPT=build-sriov-fec-operator-image.sh
 ARGS=operator

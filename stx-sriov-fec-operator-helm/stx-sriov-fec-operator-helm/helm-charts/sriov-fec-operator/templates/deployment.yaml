@@ -23,6 +23,8 @@ spec:
         command:
         - /manager
         env:
+        - name: SRIOV_FEC_IMAGE_PULL_SECRET
+          value: {{.Values.env.SRIOV_FEC_IMAGE_PULL_SECRET}}
         - name: SRIOV_FEC_DAEMON_IMAGE
           value: {{.Values.env.SRIOV_FEC_DAEMON_IMAGE}}
         - name: SRIOV_FEC_LABELER_IMAGE

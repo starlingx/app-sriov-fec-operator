@@ -23,8 +23,8 @@ fi
 build_labeler_image() {
     export LABELER_IMAGE=$1
 
-    sed -i "/FROM.*registry.*/c\FROM ${BASE_IMAGE}" labeler/Dockerfile
-
+    sed -i "/FROM.*registry.*/c\FROM ${BASE_IMAGE}" \
+        labeler/Dockerfile
     echo "labeler_image: ${LABELER_IMAGE}"
 
     pwd
