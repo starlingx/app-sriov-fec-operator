@@ -14,6 +14,7 @@ kubeRbacProxy:
     tag: v0.11.0
 
 env:
+  SRIOV_FEC_VFIO_TOKEN: ""
   SRIOV_FEC_IMAGE_PULL_SECRET: "default-registry-key"
   SRIOV_FEC_DAEMON_IMAGE: "registry.local:9001/docker.io/starlingx/sriov-fec-daemon:stx.8.0-v2.1.1-1"
   SRIOV_FEC_LABELER_IMAGE: "registry.local:9001/docker.io/starlingx/sriov-fec-labeler:stx.8.0-v2.1.1-1"

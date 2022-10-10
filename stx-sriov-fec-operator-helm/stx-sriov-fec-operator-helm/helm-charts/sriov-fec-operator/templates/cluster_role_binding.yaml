@@ -1,18 +1,4 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: sriov-fec-leader-election-rolebinding
-  namespace: sriov-fec-system
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: sriov-fec-leader-election-role
-subjects:
-- kind: ServiceAccount
-  name: sriov-fec-controller-manager
-  namespace: sriov-fec-system
----
-apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: sriov-fec-manager-rolebinding

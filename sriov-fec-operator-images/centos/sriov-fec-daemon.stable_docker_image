@@ -1,7 +1,8 @@
 BUILDER=script
 LABEL=sriov-fec-daemon
 SOURCE_REPO=https://github.com/smart-edge-open/sriov-fec-operator.git
-SOURCE_REF=0293536cd6712d8f650e18191f3a4d1579f8f633
+SOURCE_REF=7eec69b3b7151b1eaccaacd480004654af81784b
+SOURCE_PATCHES="../files/0001-patch-for-docker-images.patch"
 COMMAND=bash
 SCRIPT=build-sriov-fec-operator-image.sh
 ARGS=daemon

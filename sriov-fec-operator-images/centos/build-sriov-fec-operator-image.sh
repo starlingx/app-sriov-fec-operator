@@ -21,14 +21,14 @@ if [ -z "${IMAGE_TAG}" ]; then
 fi
 
 build_labeler_image() {
-    export LABELER_IMAGE=$1
+    export SRIOV_FEC_LABELER_IMAGE=$1
 
     sed -i "/FROM.*registry.*/c\FROM ${BASE_IMAGE}" \
-        labeler/Dockerfile
-    echo "labeler_image: ${LABELER_IMAGE}"
+        Dockerfile.labeler
+    echo "labeler_image: ${SRIOV_FEC_LABELER_IMAGE}"
 
     pwd
-    make -C labeler image
+    make image-sriov-fec-labeler
 
     echo "Labeler image build done"
 
@@ -39,12 +39,12 @@ build_daemon_image() {
     export SRIOV_FEC_DAEMON_IMAGE=$1
 
     sed -i "/FROM.*registry.*/c\FROM ${BASE_IMAGE}" \
-        sriov-fec/Dockerfile.daemon
+        Dockerfile.daemon
 
     echo "daemon_image: ${SRIOV_FEC_DAEMON_IMAGE}"
 
     pwd
-    make -C sriov-fec image-sriov-fec-daemon
+    make image-sriov-fec-daemon
 
     echo "Daemon image build done"
 
@@ -56,12 +56,12 @@ build_operator_image() {
     export SRIOV_FEC_OPERATOR_IMAGE=$1
 
     sed -i "/FROM.*registry.*/c\FROM ${BASE_IMAGE}" \
-        sriov-fec/Dockerfile
+        Dockerfile
 
     echo "operator_image: ${SRIOV_FEC_OPERATOR_IMAGE}"
 
     pwd
-    make -C sriov-fec image-sriov-fec-operator
+    make image-sriov-fec-operator
 
     echo "Operator image build done"
 

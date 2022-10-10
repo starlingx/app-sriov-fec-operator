@@ -1,0 +1,103 @@
+From 6959d432b7d7c4d53d1ab8ee9b94ad8b8a9b4c4b Mon Sep 17 00:00:00 2001
+From: Nidhi Shivashankara Belur <nidhi.shivashankara.belur@intel.com>
+Date: Thu, 13 Oct 2022 22:17:19 +0000
+Subject: [PATCH] patch for docker images
+
+  - Add Image Pull Secrets to service accounts.
+  - Remove Docker Image Tag creation to prevent multiple image tags.
+  - VFIO mode fix for STX to disable Operator from checking if vfio_pci
+    enable_sriov is enabled in the kernel command line parameters, as it is not
+    required for StarlingX platform. This module parameter is mandatory for 
+    vfio mode, which will be mentioned in the documentation. 
+
+Signed-off-by: Nidhi Shivashankara Belur <nidhi.shivashankara.belur@intel.com>
+---
+ Makefile                      | 3 ---
+ assets/100-labeler.yaml       | 2 ++
+ assets/200-device-plugin.yaml | 2 ++
+ assets/300-daemon.yaml        | 2 ++
+ pkg/daemon/daemon.go          | 1 +
+ 5 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 02d39d2..bc4c086 100644
+--- a/Makefile
++++ b/Makefile
+@@ -194,7 +194,6 @@ kustomize: ## Download kustomize locally if necessary.
+ image-sriov-fec-daemon:
+ 	cp LICENSE TEMP_LICENSE_COPY
+ 	$(CONTAINER_TOOL) build . -f Dockerfile.daemon -t $(SRIOV_FEC_DAEMON_IMAGE) --build-arg=VERSION=$(IMG_VERSION)
+-	$(CONTAINER_TOOL) tag $(SRIOV_FEC_DAEMON_IMAGE) ghcr.io/smart-edge-open/sriov-fec-daemon:$(VERSION)
+ 	
+ .PHONY: push-sriov-fec-daemon
+ podman-push-sriov-fec-daemon:
+@@ -209,7 +208,6 @@ docker-push-sriov-fec-daemon:
+ image-sriov-fec-labeler:
+ 	cp LICENSE TEMP_LICENSE_COPY
+ 	$(CONTAINER_TOOL) build . -f Dockerfile.labeler -t ${SRIOV_FEC_LABELER_IMAGE} --build-arg=VERSION=$(IMG_VERSION)
+-	$(CONTAINER_TOOL) tag $(SRIOV_FEC_LABELER_IMAGE) ghcr.io/smart-edge-open/sriov-fec-labeler:$(VERSION)
+ 
+ .PHONY: push-sriov-fec-labeler
+ podman-push-sriov-fec-labeler:
+@@ -224,7 +222,6 @@ docker-push-sriov-fec-labeler:
+ image-sriov-fec-operator:
+ 	cp LICENSE TEMP_LICENSE_COPY
+ 	$(CONTAINER_TOOL) build . -t $(SRIOV_FEC_OPERATOR_IMAGE) --build-arg=VERSION=$(IMG_VERSION)
+-	$(CONTAINER_TOOL) tag $(SRIOV_FEC_OPERATOR_IMAGE) ghcr.io/smart-edge-open/sriov-fec-operator:$(VERSION)
+ 
+ .PHONY: podman-push-sriov-fec-operator
+ podman-push-sriov-fec-operator:
+diff --git a/assets/100-labeler.yaml b/assets/100-labeler.yaml
+index 0681d6d..37210fc 100644
+--- a/assets/100-labeler.yaml
++++ b/assets/100-labeler.yaml
+@@ -36,6 +36,8 @@ data:
+   serviceAccount: |
+     apiVersion: v1
+     kind: ServiceAccount
++    imagePullSecrets:
++      - name: "{{ .SRIOV_FEC_IMAGE_PULL_SECRET }}"
+     metadata:
+       name: accelerator-discovery
+       namespace: {{ .SRIOV_FEC_NAMESPACE }}
+diff --git a/assets/200-device-plugin.yaml b/assets/200-device-plugin.yaml
+index 64d5374..f9b9e7f 100644
+--- a/assets/200-device-plugin.yaml
++++ b/assets/200-device-plugin.yaml
+@@ -11,6 +11,8 @@ data:
+   serviceAccount: |
+     apiVersion: v1
+     kind: ServiceAccount
++    imagePullSecrets:
++      - name: "{{ .SRIOV_FEC_IMAGE_PULL_SECRET }}"
+     metadata:
+       name: sriov-device-plugin
+       namespace: {{ .SRIOV_FEC_NAMESPACE }}
+diff --git a/assets/300-daemon.yaml b/assets/300-daemon.yaml
+index b2cc28d..229249c 100644
+--- a/assets/300-daemon.yaml
++++ b/assets/300-daemon.yaml
+@@ -10,6 +10,8 @@ immutable: false
+ data:
+   serviceAccount: |
+     apiVersion: v1
++    imagePullSecrets:
++      - name: "{{ .SRIOV_FEC_IMAGE_PULL_SECRET }}"
+     kind: ServiceAccount
+     metadata:
+       name: sriov-fec-daemon
+diff --git a/pkg/daemon/daemon.go b/pkg/daemon/daemon.go
+index 705a86c..db63308 100644
+--- a/pkg/daemon/daemon.go
++++ b/pkg/daemon/daemon.go
+@@ -400,6 +400,7 @@ func validateNodeConfig(nodeConfig fec.SriovFecNodeConfigSpec) error {
+ }
+ 
+ func validateVfioKernelParams(cmdline string) error {
++  return nil
+ 	for _, param := range kernelParamsVfio {
+ 		if !strings.Contains(cmdline, param) {
+ 			return fmt.Errorf("missing kernel param for vfio-pci(%s)", param)
+-- 
+2.25.1
+
