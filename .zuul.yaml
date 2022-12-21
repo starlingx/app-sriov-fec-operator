@@ -23,11 +23,11 @@
       - starlingx/update
       - starlingx/utilities
     files:
-      - python-k8sapp-sriov-fec-operator/*
+      - python3-k8sapp-sriov-fec-operator/*
     vars:
         tox_envlist: py39
         python_version: 3.9
-        tox_extra_args: -c python-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+        tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
 
 - job:
     name: k8sapp-sriov-fec-operator-tox-pylint
@@ -41,7 +41,7 @@
       - starlingx/utilities
     nodeset: ubuntu-bionic
     files:
-      - python-k8sapp-sriov-fec-operator/*
+      - python3-k8sapp-sriov-fec-operator/*
     vars:
       tox_envlist: pylint
-      tox_extra_args: -c python-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini

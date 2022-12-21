@@ -1,3 +1,0 @@
-SRC_DIR="k8sapp_sriov_fec_operator"
-
-TIS_PATCH_VER=PKG_GITREVCOUNT

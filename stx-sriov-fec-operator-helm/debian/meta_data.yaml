@@ -4,4 +4,6 @@ debver: 1.0-1
 src_path: stx-sriov-fec-operator-helm
 revision:
   dist: $STX_DIST
-  PKG_GITREVCOUNT: true
+  GITREVCOUNT:
+    SRC_DIR: ${MY_REPO}/stx/app-sriov-fec-operator
+    BASE_SRCREV: 46a85804ca045e00ce0778d94f9bb4d3faa3f6cd
