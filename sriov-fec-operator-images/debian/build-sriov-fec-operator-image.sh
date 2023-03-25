@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2022 Intel Corporation
+# Copyright (c) 2023 Intel Corporation
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -37,9 +37,6 @@ build_labeler_image() {
 
 build_daemon_image() {
     export SRIOV_FEC_DAEMON_IMAGE=$1
-
-    sed -i "/FROM.*registry.*/c\FROM ${BASE_IMAGE}" \
-        Dockerfile.daemon
 
     echo "daemon_image: ${SRIOV_FEC_DAEMON_IMAGE}"
 

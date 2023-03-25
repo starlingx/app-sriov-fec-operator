@@ -1,11 +1,10 @@
 #
-# Copyright (c) 2022 Intel Corporation
+# Copyright (c) 2022-2023 Intel Corporation
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
 from k8sapp_sriov_fec_operator.common import constants as app_constants
-from sysinv.tests.helm.test_helm import HelmOperatorTestSuiteMixin
 
 from sysinv.tests.db import base as dbbase
 
@@ -26,7 +25,6 @@ class K8SAppSriovFecOperatorAppMixin(object):
 class K8SAppSriovFecOperatorControllerTestCase(K8SAppSriovFecOperatorAppMixin,
                                     dbbase.BaseIPv6Mixin,
                                     dbbase.BaseCephStorageBackendMixin,
-                                    HelmOperatorTestSuiteMixin,
                                     dbbase.ControllerHostTestCase):
     pass
 
@@ -38,6 +36,5 @@ class K8SAppSriovFecOperatorControllerTestCase(K8SAppSriovFecOperatorAppMixin,
 # - sriov-fec-operator-app
 class K8SAppSriovFecOperatorAIOTestCase(K8SAppSriovFecOperatorAppMixin,
                              dbbase.BaseCephStorageBackendMixin,
-                             HelmOperatorTestSuiteMixin,
                              dbbase.AIOSimplexHostTestCase):
     pass

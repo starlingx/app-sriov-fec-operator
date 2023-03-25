@@ -39,7 +39,7 @@
       - starlingx/fault
       - starlingx/update
       - starlingx/utilities
-    nodeset: ubuntu-bionic
+    nodeset: debian-bullseye
     files:
       - python3-k8sapp-sriov-fec-operator/*
     vars:
