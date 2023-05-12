@@ -14,3 +14,5 @@ HELM_NS_SRIOV_FEC_SYSTEM = 'sriov-fec-system'
 # Helm: Supported charts:
 # These values match the names in the chart package's Chart.yaml
 HELM_CHART_SRIOV_FEC_OPERATOR = 'sriov-fec-operator'
+
+HELM_COMPONENT_LABEL_SRIOV_FEC_OPERATOR = 'app.starlingx.io/component'
