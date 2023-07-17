@@ -1,8 +1,8 @@
 BUILDER=script
 LABEL=sriov-fec-labeler
 SOURCE_REPO=https://github.com/smart-edge-open/sriov-fec-operator.git
-SOURCE_REF=45fa1e052bdcf93653cdbb8c5916cbe519f5f273
-SOURCE_PATCHES="../files/0001-patch-for-docker-images.patch"
+SOURCE_REF=e5e578e839d10db35140d19b441ab3fe72e322d7
+SOURCE_PATCHES="../files/0001-Add-image-pull-secrets-for-stx-builds.patch"
 COMMAND=bash
 SCRIPT=build-sriov-fec-operator-image.sh
 ARGS=labeler

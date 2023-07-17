@@ -8,7 +8,6 @@
 IMAGE=$1
 IMAGE_TAG=$2
 export CONTAINER_TOOL=docker
-export BASE_IMAGE="centos:7.9.2009"
 
 echo "=============== build script ================"
 echo image: "${IMAGE}"
@@ -23,8 +22,6 @@ fi
 build_labeler_image() {
     export SRIOV_FEC_LABELER_IMAGE=$1
 
-    sed -i "/FROM.*registry.*/c\FROM ${BASE_IMAGE}" \
-        Dockerfile.labeler
     echo "labeler_image: ${SRIOV_FEC_LABELER_IMAGE}"
 
     pwd
@@ -51,9 +48,6 @@ build_daemon_image() {
 build_operator_image() {
 
     export SRIOV_FEC_OPERATOR_IMAGE=$1
-
-    sed -i "/FROM.*registry.*/c\FROM ${BASE_IMAGE}" \
-        Dockerfile
 
     echo "operator_image: ${SRIOV_FEC_OPERATOR_IMAGE}"
 
