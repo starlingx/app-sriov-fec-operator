@@ -12,38 +12,14 @@ rules:
   - secrets
   - serviceaccounts
   verbs:
-  - create
-  - get
-  - list
-  - update
+  - '*'
 - apiGroups:
   - ""
   resources:
   - nodes
   verbs:
-  - get
   - list
-  - patch
-  - update
   - watch
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - pods/eviction
-  verbs:
-  - create
 - apiGroups:
   - apps
   resources:
@@ -51,10 +27,7 @@ rules:
   - deployments
   - deployments/finalizers
   verbs:
-  - create
-  - get
-  - list
-  - update
+  - '*'
 - apiGroups:
   - rbac.authorization.k8s.io
   resources:
@@ -63,18 +36,13 @@ rules:
   - rolebindings
   - roles
   verbs:
-  - create
-  - get
-  - list
-  - update
+  - '*'
 - apiGroups:
   - security.openshift.io
-  resourceNames:
-  - privileged
   resources:
   - securitycontextconstraints
   verbs:
-  - use
+  - '*'
 - apiGroups:
   - sriovfec.intel.com
   resources:

@@ -1,6 +1,6 @@
 ---
 debname: stx-sriov-fec-operator-helm
-debver: 1.0-3
+debver: 1.0-2
 src_path: stx-sriov-fec-operator-helm
 revision:
   dist: $STX_DIST

@@ -1,0 +1,439 @@
+From 6bfe572dd9d350797ec5a43f85765febc8fa55b3 Mon Sep 17 00:00:00 2001
+From: Nidhi Shivashankara Belur <nidhi.shivashankara.belur@intel.com>
+Date: Fri, 7 Apr 2023 23:16:08 +0000
+Subject: [PATCH] Docker Image Changes for StarlingX integration
+
+- Add Image Pull Secrets to service accounts.
+- Remove Docker Image Tag creation to prevent multiple image tags.
+- Daemon Dockerfile updates to use CentOS base image.
+- Improve Robustness of the telemetry feature.
+
+Signed-off-by: Nidhi Shivashankara Belur <nidhi.shivashankara.belur@intel.com>
+---
+ Dockerfile.daemon             |  61 ++------------
+ Makefile                      |   3 -
+ assets/100-labeler.yaml       |   2 +
+ assets/200-device-plugin.yaml |   2 +
+ assets/300-daemon.yaml        |   7 ++
+ pkg/daemon/telemetry.go       |  23 +++++-
+ pkg/daemon/telemetry_test.go  | 148 +++++++++++++++++++++++++++++++++-
+ 7 files changed, 182 insertions(+), 64 deletions(-)
+
+diff --git a/Dockerfile.daemon b/Dockerfile.daemon
+index 746d1ab..1cbdd41 100644
+--- a/Dockerfile.daemon
++++ b/Dockerfile.daemon
+@@ -33,26 +33,19 @@ COPY api api/
+ 
+ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o sriov_fec_daemon cmd/daemon/main.go
+ 
+-FROM registry.access.redhat.com/ubi9/ubi:9.1.0-1750 as package_installer
+ 
+-RUN yum install -y ethtool iproute kmod procps-ng pciutils util-linux  tar gzip gcc make wget && yum clean all
++FROM centos:7.9.2009
+ 
+-
+-RUN wget -O zlib-1.2.13.tar.gz https://github.com/madler/zlib/releases/download/v1.2.13/zlib-1.2.13.tar.gz && \
+-    tar xzvf zlib-1.2.13.tar.gz
+-WORKDIR /zlib-1.2.13
+-RUN ./configure && make test && make install
++RUN yum install -y ethtool iproute kmod procps-ng pciutils util-linux && yum clean all
+ 
+ WORKDIR /workspace
+ 
+-RUN wget https://pci-ids.ucw.cz/v2.2/pci.ids.gz -O pci.ids.gz && \
++RUN mkdir -p /usr/share/misc/ && \
++    cd /usr/share/misc/ && \
++    curl https://pci-ids.ucw.cz/v2.2/pci.ids.gz --output pci.ids.gz && \
+     gzip -d pci.ids.gz && \
+     rm -rfv ./pci.ids.gz
+ 
+-RUN yum remove -y wget
+-
+-FROM registry.access.redhat.com/ubi9/ubi-micro:9.1.0-13
+-
+ ARG VERSION
+ ### Required OpenShift Labels
+ LABEL name="SR-IOV Operator for Wireless FEC Accelerators daemonset" \
+@@ -63,50 +56,6 @@ LABEL name="SR-IOV Operator for Wireless FEC Accelerators daemonset" \
+     description="The daemonset container is responsible for building the nodes inventory and configuring the SRIOV-FEC portion of the supported accelerators"
+ 
+ 
+-
+-RUN mkdir -p /usr/share/misc/
+-
+-COPY --from=package_installer /workspace/pci.ids /usr/share/misc/pci.ids
+-
+-COPY --from=package_installer /lib64/libm.so.6 /lib64/libmnl.so.0 /lib64/libc.so.6 /lib64/ld-linux-x86-64.so.2 \
+-    /lib64/libzstd.so.1 /lib64/liblzma.so.5 /lib64/libcrypto.so.3 /lib64/libgcc_s.so.1 \
+-    /lib64/libpci.so.3 /lib64/libkmod.so.2 /lib64/libbpf.so.0 \
+-    /lib64/libmnl.so.0 /lib64/libtinfo.so.6  /lib64/libsigsegv.so.2.0.6 /lib64/libsigsegv.so.2  \
+-    /lib64/libreadline.so.8.1 /lib64/libreadline.so.8 /lib64/libmpfr.so.6.1.0 /lib64/libmpfr.so.6 \
+-    /lib64/libgmp.so.10.4.0 /lib64/libgmp.so.10 /lib64/libprocps.so.8.0.3 /lib64/libsystemd.so.0.33.0 /lib64/liblz4.so.1.9.3 \
+-    /lib64/libgpg-error.so.0.32.0 /lib64/libgcrypt.so.20.4.0 /lib64/libuuid.so.1.3.0 \
+-    /lib64/libidn2.so.0.3.7 /lib64/libnettle.so.8.5 /lib64/libgnutls.so.30.33.1 \
+-    /lib64/libunistring.so.2.1.0 /lib64/libp11-kit.so.0.3.0 /lib64/libtasn1.so.6.6.0 \
+-    /lib64/libhogweed.so.6.5 /lib64/libffi.so.8.1.0 /lib64/
+-RUN ln -sf /usr/lib64/libsigsegv.so.2.0.6 /usr/lib64/libsigsegv.so.2 && \
+-    ln -sf /usr/lib64/libreadline.so.8.1  /usr/lib64/libreadline.so.8 && \
+-    ln -sf /usr/lib64/libmpfr.so.6.1.0  /usr/lib64/libmpfr.so.6 && \
+-    ln -sf /usr/lib64/libprocps.so.8.0.3 /usr/lib64/libprocps.so.8 && \
+-    ln -sf /usr/lib64/libsystemd.so.0.33.0 /usr/lib64/libsystemd.so.0 && \
+-    ln -sf /usr/lib64/liblz4.so.1.9.3 /usr/lib64/liblz4.so.1 && \
+-    ln -sf /usr/lib64/libgcrypt.so.20.4.0 /usr/lib64/libgcrypt.so.20 && \
+-    ln -sf /usr/lib64/libgpg-error.so.0.32.0 /usr/lib64/libgpg-error.so.0 && \
+-    ln -sf /usr/lib64/libuuid.so.1.3.0 /usr/lib64/libuuid.so.1 && \
+-    ln -sf /usr/lib64/libidn2.so.0.3.7 /usr/lib64/libidn2.so.0 && \
+-    ln -sf /usr/lib64/libnettle.so.8.5 /usr/lib64/libnettle.so.8 && \
+-    ln -sf /usr/lib64/libgnutls.so.30.33.1 /usr/lib64/libgnutls.so.30 && \
+-    ln -sf /usr/lib64/libunistring.so.2.1.0 /usr/lib64/libunistring.so.2 && \
+-    ln -sf /usr/lib64/libp11-kit.so.0.3.0 /usr/lib64/libp11-kit.so.0 && \
+-    ln -sf /usr/lib64/libtasn1.so.6.6.0 /usr/lib64/libtasn1.so.6 && \
+-    ln -sf /usr/lib64/libhogweed.so.6.5 /usr/lib64/libhogweed.so.6 && \
+-    ln -sf /usr/lib64/libffi.so.8.1.0 /usr/lib64/libffi.so.8 && \
+-    ln -sf /usr/lib64/libgmp.so.10.4.0  /usr/lib64/libgmp.so.10
+-COPY --from=package_installer /usr/local/lib/libz.so.1.2.13 /lib64/libz.so.1
+-COPY --from=package_installer /usr/sbin/ethtool /usr/sbin/lspci \
+-    /usr/sbin/setpci /usr/sbin/update-pciids /usr/sbin/ip /usr/sbin/devlink /usr/sbin/modprobe /usr/sbin/
+-COPY --from=package_installer /usr/bin/kmod /usr/bin/pkill /usr/bin/dmesg \
+-    /usr/bin/pgrep /usr/bin/
+-COPY --from=package_installer /bin/awk /bin/sed /bin/
+-
+-
+-RUN mkdir /usr/share/hwdata
+-COPY --from=package_installer /usr/share/hwdata /usr/share/hwdata
+-
+ USER 1001
+ 
+ COPY TEMP_LICENSE_COPY /licenses/LICENSE
+diff --git a/Makefile b/Makefile
+index b02289f..69018be 100644
+--- a/Makefile
++++ b/Makefile
+@@ -193,7 +193,6 @@ generate: controller-gen
+ image-sriov-fec-daemon:
+ 	cp LICENSE TEMP_LICENSE_COPY
+ 	$(CONTAINER_TOOL) build . -f Dockerfile.daemon -t $(SRIOV_FEC_DAEMON_IMAGE) --build-arg=VERSION=$(IMG_VERSION)
+-	$(CONTAINER_TOOL) tag $(SRIOV_FEC_DAEMON_IMAGE) ghcr.io/smart-edge-open/sriov-fec-daemon:$(VERSION)
+ 	
+ .PHONY: push-sriov-fec-daemon
+ podman-push-sriov-fec-daemon:
+@@ -208,7 +207,6 @@ docker-push-sriov-fec-daemon:
+ image-sriov-fec-labeler:
+ 	cp LICENSE TEMP_LICENSE_COPY
+ 	$(CONTAINER_TOOL) build . -f Dockerfile.labeler -t ${SRIOV_FEC_LABELER_IMAGE} --build-arg=VERSION=$(IMG_VERSION)
+-	$(CONTAINER_TOOL) tag $(SRIOV_FEC_LABELER_IMAGE) ghcr.io/smart-edge-open/sriov-fec-labeler:$(VERSION)
+ 
+ .PHONY: push-sriov-fec-labeler
+ podman-push-sriov-fec-labeler:
+@@ -223,7 +221,6 @@ docker-push-sriov-fec-labeler:
+ image-sriov-fec-operator:
+ 	cp LICENSE TEMP_LICENSE_COPY
+ 	$(CONTAINER_TOOL) build . -t $(SRIOV_FEC_OPERATOR_IMAGE) --build-arg=VERSION=$(IMG_VERSION)
+-	$(CONTAINER_TOOL) tag $(SRIOV_FEC_OPERATOR_IMAGE) ghcr.io/smart-edge-open/sriov-fec-operator:$(VERSION)
+ 
+ .PHONY: podman-push-sriov-fec-operator
+ podman-push-sriov-fec-operator:
+diff --git a/assets/100-labeler.yaml b/assets/100-labeler.yaml
+index 0681d6d..37210fc 100644
+--- a/assets/100-labeler.yaml
++++ b/assets/100-labeler.yaml
+@@ -36,6 +36,8 @@ data:
+   serviceAccount: |
+     apiVersion: v1
+     kind: ServiceAccount
++    imagePullSecrets:
++      - name: "{{ .SRIOV_FEC_IMAGE_PULL_SECRET }}"
+     metadata:
+       name: accelerator-discovery
+       namespace: {{ .SRIOV_FEC_NAMESPACE }}
+diff --git a/assets/200-device-plugin.yaml b/assets/200-device-plugin.yaml
+index 25dbd23..f2e48bd 100644
+--- a/assets/200-device-plugin.yaml
++++ b/assets/200-device-plugin.yaml
+@@ -11,6 +11,8 @@ data:
+   serviceAccount: |
+     apiVersion: v1
+     kind: ServiceAccount
++    imagePullSecrets:
++      - name: "{{ .SRIOV_FEC_IMAGE_PULL_SECRET }}"
+     metadata:
+       name: sriov-device-plugin
+       namespace: {{ .SRIOV_FEC_NAMESPACE }}
+diff --git a/assets/300-daemon.yaml b/assets/300-daemon.yaml
+index ce42206..8fd34fe 100644
+--- a/assets/300-daemon.yaml
++++ b/assets/300-daemon.yaml
+@@ -11,6 +11,8 @@ data:
+   serviceAccount: |
+     apiVersion: v1
+     kind: ServiceAccount
++    imagePullSecrets:
++      - name: "{{ .SRIOV_FEC_IMAGE_PULL_SECRET }}"
+     metadata:
+       name: sriov-fec-daemon
+       namespace: {{ .SRIOV_FEC_NAMESPACE }}
+@@ -184,6 +186,8 @@ data:
+             - name: devvfio
+               mountPath: /dev/vfio      
+               readOnly: true        
++            - name: sys
++              mountPath: /sys
+             - name: vfiotoken
+               mountPath: /sriov_config/
+               readOnly: true    
+@@ -236,6 +240,9 @@ data:
+           - name: devvfio
+             hostPath:
+               path: /dev/vfio
++          - name: sys
++            hostPath:
++              path: /sys
+           - name: libmodules
+             hostPath:
+               path: /lib/modules
+diff --git a/pkg/daemon/telemetry.go b/pkg/daemon/telemetry.go
+index 7659d11..7ae99e1 100644
+--- a/pkg/daemon/telemetry.go
++++ b/pkg/daemon/telemetry.go
+@@ -4,11 +4,11 @@ import (
+ 	"context"
+ 	"errors"
+ 	"fmt"
+-	fec "github.com/smart-edge-open/sriov-fec-operator/api/v2"
+-	"github.com/smart-edge-open/sriov-fec-operator/pkg/common/utils"
+ 	"github.com/prometheus/client_golang/prometheus"
+ 	"github.com/prometheus/client_golang/prometheus/promhttp"
+ 	"github.com/sirupsen/logrus"
++	fec "github.com/smart-edge-open/sriov-fec-operator/api/v2"
++	"github.com/smart-edge-open/sriov-fec-operator/pkg/common/utils"
+ 	"k8s.io/apimachinery/pkg/util/wait"
+ 	"net"
+ 	"os"
+@@ -221,6 +221,18 @@ func parseDeviceStatus(lines []string, pfPciAddr string, vfs []fec.VF, telemetry
+ 	}
+ 	telemetryGatherer.updateVfCount(pfPciAddr, string(fec.SucceededSync), vfCount)
+ 
++	if int(vfCount) != len(vfs) {
++		log.WithError(err).WithField("value", strings.TrimSuffix(deviceStatus[1], " VFs")).
++			Error("No. of VFs from in metrics log is wrong. Skipping metric.")
++		return
++	}
++
++	if len(lines) < ((int(vfCount) + 1) * 2) {
++		log.WithError(err).WithField("value", strings.TrimSuffix(deviceStatus[1], " VFs")).
++			Error("failed to parse VF status. Skipping metric.")
++		return
++	}
++
+ 	for vfIdx := 0; vfIdx < int(vfCount); vfIdx++ {
+ 		vfStatus := strings.Split(lines[(vfIdx+1)*2], fmt.Sprintf("VF %v ", vfIdx))
+ 		isReady := float64(0)
+@@ -232,6 +244,13 @@ func parseDeviceStatus(lines []string, pfPciAddr string, vfs []fec.VF, telemetry
+ }
+ 
+ func parseCounters(fieldLine, valueLine string, vfs []fec.VF, pfPciAddr string, telemetryGatherer *telemetryGatherer, log *logrus.Logger) {
++
++	if len(fieldLine) <= 0 || len(valueLine) <= 0 {
++		log.WithField("metrics", len(valueLine)).WithField("pciAddr", pfPciAddr).
++			Errorf("Metrics values are null, skip it.")
++		return
++	}
++
+ 	fieldName := strings.Split(fieldLine, "INFO:")[1]
+ 	value := strings.Split(valueLine, "INFO:")[1]
+ 
+diff --git a/pkg/daemon/telemetry_test.go b/pkg/daemon/telemetry_test.go
+index f37dcd7..a9aa0fc 100644
+--- a/pkg/daemon/telemetry_test.go
++++ b/pkg/daemon/telemetry_test.go
+@@ -2,12 +2,12 @@ package daemon
+ 
+ import (
+ 	"fmt"
+-	v2 "github.com/smart-edge-open/sriov-fec-operator/api/v2"
+-	"github.com/smart-edge-open/sriov-fec-operator/pkg/common/utils"
+ 	. "github.com/onsi/ginkgo"
+ 	. "github.com/onsi/gomega"
+ 	"github.com/prometheus/client_golang/prometheus/testutil"
+ 	"github.com/sirupsen/logrus"
++	v2 "github.com/smart-edge-open/sriov-fec-operator/api/v2"
++	"github.com/smart-edge-open/sriov-fec-operator/pkg/common/utils"
+ 	"net"
+ 	"os"
+ 	"strings"
+@@ -157,6 +157,63 @@ var _ = Describe("parseCounters", func() {
+ 		tg.resetMetrics()
+ 	})
+ 
++	It("value Line null", func() {
++		fieldLine := "Fri Sep 13 10:49:25 2022:INFO:FFT counters: Per Engine"
++		valueLine := ""
++
++		logger := utils.NewLogger()
++		hook := &testHook{
++			expectedError: "Metrics values are null, skip it.",
++		}
++		logger.AddHook(hook)
++
++		parseCounters(fieldLine, valueLine, []v2.VF{
++			{PCIAddress: "9999:99:99.9"},
++		}, "9999:99:99.0", tg, logger)
++		tg.updateMetrics()
++
++		Expect(testutil.CollectAndCount(tg.engineGauge)).To(Equal(0))
++		Expect(hook.expectedErrorOccured).To(BeTrue())
++	})
++
++	It("field Line null", func() {
++		fieldLine := ""
++		valueLine := ""
++
++		logger := utils.NewLogger()
++		hook := &testHook{
++			expectedError: "Metrics values are null, skip it.",
++		}
++		logger.AddHook(hook)
++
++		parseCounters(fieldLine, valueLine, []v2.VF{
++			{PCIAddress: "9999:99:99.9"},
++		}, "9999:99:99.0", tg, logger)
++		tg.updateMetrics()
++
++		Expect(testutil.CollectAndCount(tg.engineGauge)).To(Equal(0))
++		Expect(hook.expectedErrorOccured).To(BeTrue())
++	})
++
++	It("Incomplete Value Line data", func() {
++		fieldLine := "Fri Sep 13 10:49:25 2022:INFO:FFT counters: Per Engine"
++		valueLine := "Tue Sep 13 10:49:25 2022:INFO:"
++
++		logger := utils.NewLogger()
++		hook := &testHook{
++			expectedError: "failed to parse string into float64. Skipping metric.",
++		}
++		logger.AddHook(hook)
++
++		parseCounters(fieldLine, valueLine, []v2.VF{
++			{PCIAddress: "9999:99:99.9"},
++		}, "9999:99:99.0", tg, logger)
++		tg.updateMetrics()
++
++		Expect(testutil.CollectAndCount(tg.engineGauge)).To(Equal(0))
++		Expect(hook.expectedErrorOccured).To(BeTrue())
++	})
++
+ 	It("one FFT engine value is exposed", func() {
+ 		parseCounters("Fri Sep 13 10:49:25 2022:INFO:FFT counters: Per Engine", "Tue Sep 13 10:49:25 2022:INFO:123", []v2.VF{
+ 			{PCIAddress: "9999:99:99.9"},
+@@ -178,6 +235,28 @@ var _ = Describe("parseCounters", func() {
+ 		Expect(testutil.ToFloat64(gauge)).To(Equal(float64(999)))
+ 	})
+ 
++	It("3 5GUL values are exposed with no values", func() {
++		pfPciAddr := "9999:00:00.0"
++		fieldLine := "Fri Sep 13 10:49:25 2022:INFO:5GUL counters: Data (Bytes)"
++		valueLine := "Tue Sep 13 10:49:25 2022:INFO:"
++
++		logger := utils.NewLogger()
++		hook := &testHook{
++			expectedError: "number of metrics doesn't equals to number of VFs",
++		}
++		logger.AddHook(hook)
++
++		parseCounters(fieldLine, valueLine, []v2.VF{
++			{PCIAddress: "9999:01:00.0"},
++			{PCIAddress: "9999:01:00.1"},
++			{PCIAddress: "9999:01:00.2"},
++		}, pfPciAddr, tg, logger)
++		tg.updateMetrics()
++
++		Expect(testutil.CollectAndCount(tg.engineGauge)).To(Equal(0))
++		Expect(hook.expectedErrorOccured).To(BeTrue())
++	})
++
+ 	It("3 5GUL values are exposed", func() {
+ 		pfPciAddr := "9999:00:00.0"
+ 		opType := "5GUL"
+@@ -294,7 +373,8 @@ Fri Sep 16 10:42:33 2022:INFO:-  VF 1 RTE_BBDEV_DEV_ACTIVE
+ 
+ Fri Sep 16 10:42:33 2022:INFO:-  VF 2 RTE_BBDEV_DEV_RESTART_REQ
+ 
+-Fri Sep 16 10:42:33 2022:INFO:-  VF 3 RTE_BBDEV_DEV_RECONFIG_REQ`
++Fri Sep 16 10:42:33 2022:INFO:-  VF 3 RTE_BBDEV_DEV_RECONFIG_REQ
++`
+ 
+ 		parseDeviceStatus(strings.Split(fileLog, "\n"), "1111:00:00.0", []v2.VF{
+ 			{PCIAddress: "1111:01:00.0"},
+@@ -343,6 +423,68 @@ Fri Sep 16 10:42:33 2022:INFO:-  VF 3 RTE_BBDEV_DEV_RECONFIG_REQ`
+ 		Expect(testutil.CollectAndCount(tg.vfCountGauge)).To(Equal(0))
+ 		Expect(hook.expectedErrorOccured).To(BeTrue())
+ 	})
++
++	It("Should skip metrics for insufficient data", func() {
++		logger := utils.NewLogger()
++		hook := &testHook{
++			expectedError: "failed to parse VF status. Skipping metric.",
++		}
++		logger.AddHook(hook)
++		fileLog := `Fri Sep 16 10:42:33 2022:INFO:Device Status:: 1 VFs`
++		parseDeviceStatus(strings.Split(fileLog, "\n"), "1111:00:00.0", []v2.VF{
++			{PCIAddress: "1111:01:00.0"},
++		}, tg, logger)
++		tg.updateMetrics()
++
++		Expect(testutil.CollectAndCount(tg.vfCountGauge)).To(Equal(1))
++		Expect(hook.expectedErrorOccured).To(BeTrue())
++	})
++
++	It("Should skip metrics for when VF count is less than expected", func() {
++		logger := utils.NewLogger()
++		hook := &testHook{
++			expectedError: "No. of VFs from in metrics log is wrong. Skipping metric.",
++		}
++		logger.AddHook(hook)
++		fileLog := `Fri Sep 16 10:42:33 2022:INFO:Device Status:: 1 VFs
++
++Fri Sep 16 10:42:33 2022:INFO:-  VF 0 RTE_BBDEV_DEV_CONFIGURED
++
++`
++		parseDeviceStatus(strings.Split(fileLog, "\n"), "1111:00:00.0", []v2.VF{
++			{PCIAddress: "1111:01:00.0"},
++			{PCIAddress: "1111:01:00.1"},
++			{PCIAddress: "1111:01:00.2"},
++		}, tg, logger)
++		tg.updateMetrics()
++
++		Expect(testutil.CollectAndCount(tg.vfCountGauge)).To(Equal(1))
++		Expect(hook.expectedErrorOccured).To(BeTrue())
++	})
++
++	It("Should skip metrics for when VF count is more than expected", func() {
++		logger := utils.NewLogger()
++		hook := &testHook{
++			expectedError: "No. of VFs from in metrics log is wrong. Skipping metric.",
++		}
++		logger.AddHook(hook)
++		fileLog := `Fri Sep 16 10:42:33 2022:INFO:Device Status:: 3 VFs
++
++Fri Sep 16 10:42:33 2022:INFO:-  VF 0 RTE_BBDEV_DEV_CONFIGURED
++
++Fri Sep 16 10:42:33 2022:INFO:-  VF 1 RTE_BBDEV_DEV_CONFIGURED
++
++Fri Sep 16 10:42:33 2022:INFO:-  VF 3 RTE_BBDEV_DEV_CONFIGURED
++
++`
++		parseDeviceStatus(strings.Split(fileLog, "\n"), "1111:00:00.0", []v2.VF{
++			{PCIAddress: "1111:01:00.1"},
++		}, tg, logger)
++		tg.updateMetrics()
++
++		Expect(testutil.CollectAndCount(tg.vfCountGauge)).To(Equal(1))
++		Expect(hook.expectedErrorOccured).To(BeTrue())
++	})
+ })
+ 
+ type testHook struct {
+-- 
+2.25.1
+

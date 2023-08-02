@@ -139,15 +139,6 @@ class SriovFecOperatorAppLifecycleOperator(base.AppLifecycleOperator):
         return overrides.user_overrides or ""
 
     def _delete_security_profiles_operator_pods(self, app_op, client_core):
-        # Delete the lease after deleting all the pods
-        cmd = ['kubectl', '--kubeconfig', kubernetes.KUBERNETES_ADMIN_CONF,
-               'delete', '-n', app_constants.HELM_NS_SRIOV_FEC_SYSTEM,
-               'lease', "98e78623.intel.com"]
-        stdout, stderr = cutils.trycmd(*cmd)
-        LOG.debug(
-               "{} app: cmd={} stdout={} stderr={}".format(
-                   app_constants.HELM_APP_SRIOV_FEC_OPERATOR, cmd, stdout, stderr))
-
         # pod list
         system_pods = client_core.list_namespaced_pod(app_constants.HELM_NS_SRIOV_FEC_SYSTEM)
 
