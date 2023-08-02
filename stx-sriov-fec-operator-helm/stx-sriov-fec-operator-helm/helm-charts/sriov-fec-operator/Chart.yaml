@@ -3,4 +3,4 @@ name: sriov-fec-operator
 description: A Helm chart for SR-IOV FEC operator deployment
 type: application
 version: 0.1.3
-appVersion: "2.6.1"
+appVersion: "2.7.1"

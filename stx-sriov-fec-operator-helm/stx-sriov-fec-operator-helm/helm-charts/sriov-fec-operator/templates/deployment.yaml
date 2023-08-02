@@ -25,6 +25,14 @@ spec:
         command:
         - /manager
         env:
+        - name: SRIOV_FEC_LTE_RESOURCE_NAME
+          value: {{.Values.env.SRIOV_FEC_LTE_RESOURCE_NAME}}
+        - name: SRIOV_FEC_5G_RESOURCE_NAME
+          value: {{.Values.env.SRIOV_FEC_5G_RESOURCE_NAME}}
+        - name: SRIOV_FEC_ACC100_RESOURCE_NAME
+          value: {{.Values.env.SRIOV_FEC_ACC100_RESOURCE_NAME}}
+        - name: SRIOV_FEC_ACC200_RESOURCE_NAME
+          value: {{.Values.env.SRIOV_FEC_ACC200_RESOURCE_NAME}}
         - name: SRIOV_FEC_VFIO_TOKEN
           value: {{.Values.env.SRIOV_FEC_VFIO_TOKEN}}
         - name: SRIOV_FEC_IMAGE_PULL_SECRET
