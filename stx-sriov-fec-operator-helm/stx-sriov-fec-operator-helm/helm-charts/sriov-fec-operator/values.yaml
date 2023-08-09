@@ -5,7 +5,7 @@
 manager:
   image:
     repository: docker.io/starlingx/sriov-fec-operator
-    tag: stx.9.0-v2.6.1
+    tag: stx.9.0-v2.7.1
 
 kubeRbacProxy:
   name: kube-rbac-proxy
@@ -20,7 +20,7 @@ env:
   SRIOV_FEC_ACC200_RESOURCE_NAME: ""
   SRIOV_FEC_VFIO_TOKEN: ""
   SRIOV_FEC_IMAGE_PULL_SECRET: "default-registry-key"
-  SRIOV_FEC_DAEMON_IMAGE: "registry.local:9001/docker.io/starlingx/sriov-fec-daemon:stx.9.0-v2.6.1"
-  SRIOV_FEC_LABELER_IMAGE: "registry.local:9001/docker.io/starlingx/sriov-fec-labeler:stx.9.0-v2.6.1"
+  SRIOV_FEC_DAEMON_IMAGE: "registry.local:9001/docker.io/starlingx/sriov-fec-daemon:stx.9.0-v2.7.1"
+  SRIOV_FEC_LABELER_IMAGE: "registry.local:9001/docker.io/starlingx/sriov-fec-labeler:stx.9.0-v2.7.1"
   SRIOV_FEC_NETWORK_DEVICE_PLUGIN_IMAGE: "registry.local:9001/ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin:v3.5.1"
   KUBE_RBAC_PROXY_IMAGE: "registry.local:9001/gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1"
