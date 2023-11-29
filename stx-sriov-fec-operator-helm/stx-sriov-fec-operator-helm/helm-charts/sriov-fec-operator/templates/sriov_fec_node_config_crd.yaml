@@ -494,7 +494,7 @@ spec:
                                   minimum: 1
                                   type: integer
                                 numQueueGroups:
-                                  maximum: 8
+                                  maximum: 16
                                   minimum: 0
                                   type: integer
                               required:
@@ -513,7 +513,7 @@ spec:
                                   minimum: 1
                                   type: integer
                                 numQueueGroups:
-                                  maximum: 8
+                                  maximum: 16
                                   minimum: 0
                                   type: integer
                               required:
@@ -544,7 +544,7 @@ spec:
                                   minimum: 1
                                   type: integer
                                 numQueueGroups:
-                                  maximum: 8
+                                  maximum: 16
                                   minimum: 0
                                   type: integer
                               required:
@@ -563,7 +563,7 @@ spec:
                                   minimum: 1
                                   type: integer
                                 numQueueGroups:
-                                  maximum: 8
+                                  maximum: 16
                                   minimum: 0
                                   type: integer
                               required:
@@ -593,7 +593,7 @@ spec:
                                   minimum: 1
                                   type: integer
                                 numQueueGroups:
-                                  maximum: 8
+                                  maximum: 16
                                   minimum: 0
                                   type: integer
                               required:
@@ -612,13 +612,29 @@ spec:
                                   minimum: 1
                                   type: integer
                                 numQueueGroups:
-                                  maximum: 8
+                                  maximum: 16
                                   minimum: 0
                                   type: integer
                               required:
                               - aqDepthLog2
                               - numAqsPerGroups
                               - numQueueGroups
+                              type: object
+                            fftLut:
+                              description: FFTLutParam specifies variables required
+                                to use custom fft bin file
+                              properties:
+                                fftChecksum:
+                                  description: SHA-1 checksum of .tar.gz SRS-FFT File
+                                  pattern: ^([a-fA-F0-9]{40})?$
+                                  type: string
+                                fftUrl:
+                                  description: Path to .tar.gz SRS-FFT file
+                                  pattern: ^((http|https)://.*\.tar\.gz)?$
+                                  type: string
+                              required:
+                              - fftChecksum
+                              - fftUrl
                               type: object
                             maxQueueSize:
                               maximum: 1024
@@ -643,7 +659,7 @@ spec:
                                   minimum: 1
                                   type: integer
                                 numQueueGroups:
-                                  maximum: 8
+                                  maximum: 16
                                   minimum: 0
                                   type: integer
                               required:
@@ -662,7 +678,7 @@ spec:
                                   minimum: 1
                                   type: integer
                                 numQueueGroups:
-                                  maximum: 8
+                                  maximum: 16
                                   minimum: 0
                                   type: integer
                               required:
@@ -681,7 +697,7 @@ spec:
                                   minimum: 1
                                   type: integer
                                 numQueueGroups:
-                                  maximum: 8
+                                  maximum: 16
                                   minimum: 0
                                   type: integer
                               required:

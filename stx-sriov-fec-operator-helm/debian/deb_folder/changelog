@@ -1,3 +1,9 @@
+stx-sriov-fec-operator-helm (1.0-4) unstable; urgency=medium
+
+  * Upversion sriov-fec-operator v2.8.0.
+
+ --  Nidhi Shivashankara Belur <nidhi.shivashankara.belur@intel.com>  Wed, 29 Nov 2023 16:15:09 +0000
+
 stx-sriov-fec-operator-helm (1.0-3) unstable; urgency=medium
 
   * Upversion sriov-fec-operator v2.7.1.

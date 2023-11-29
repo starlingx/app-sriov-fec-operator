@@ -20,11 +20,11 @@ kubeRbacProxy:
   name: kube-rbac-proxy
   image:
     repository: gcr.io/kubebuilder/kube-rbac-proxy
-    tag: v0.13.1
+    tag: v0.15.0
 
 sriovNetworkDevicePlugin:
   image:
-    digest: "f717f9778f48665b7c592f2225df51b755a1fe048125e034a286c564ee10fd37"
+    digest: "039e833ca400f79a53aa14534ea2b68e247d39e3d0708f098c540af017bdbc63"
     repository: ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin
-    tag: v3.5.1
+    tag: v3.6.2
     pullPolicy: IfNotPresent

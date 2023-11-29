@@ -1,7 +1,7 @@
 BUILDER=script
 LABEL=sriov-fec-daemon
 SOURCE_REPO=https://github.com/smart-edge-open/sriov-fec-operator.git
-SOURCE_REF=e5e578e839d10db35140d19b441ab3fe72e322d7
+SOURCE_REF=02565627335dc5f55a12f648182de7a29282b93e
 SOURCE_PATCHES="../files/0001-Add-image-pull-secrets-for-stx-builds.patch"
 COMMAND=bash
 SCRIPT=build-sriov-fec-operator-image.sh

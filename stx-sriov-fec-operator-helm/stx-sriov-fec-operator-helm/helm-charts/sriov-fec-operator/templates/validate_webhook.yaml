@@ -25,3 +25,23 @@ webhooks:
     resources:
     - sriovfecclusterconfigs
   sideEffects: None
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: sriov-fec-webhook-service
+      namespace: sriov-fec-system
+      path: /validate-sriovvrb-intel-com-v1-sriovvrbclusterconfig
+  failurePolicy: Fail
+  name: vsriovvrbclusterconfig.kb.io
+  rules:
+  - apiGroups:
+    - sriovvrb.intel.com
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - sriovvrbclusterconfigs
+  sideEffects: None
