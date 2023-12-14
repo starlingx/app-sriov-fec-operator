@@ -5,15 +5,19 @@
         - openstack-tox-linters
         - k8sapp-sriov-fec-operator-tox-py39
         - k8sapp-sriov-fec-operator-tox-pylint
+        - k8sapp-sriov-fec-operator-tox-flake8
+        - k8sapp-sriov-fec-operator-tox-metadata
     gate:
       jobs:
         - openstack-tox-linters
         - k8sapp-sriov-fec-operator-tox-py39
         - k8sapp-sriov-fec-operator-tox-pylint
+        - k8sapp-sriov-fec-operator-tox-flake8
+        - k8sapp-sriov-fec-operator-tox-metadata
 
 - job:
     name: k8sapp-sriov-fec-operator-tox-py39
-    parent: tox-py39
+    parent:  openstack-tox-py39
     description: |
         Run py39 for sriov-fec-operator app
     nodeset: debian-bullseye
@@ -22,12 +26,31 @@
       - starlingx/fault
       - starlingx/update
       - starlingx/utilities
+      - starlingx/root
     files:
       - python3-k8sapp-sriov-fec-operator/*
     vars:
-        tox_envlist: py39
-        python_version: 3.9
         tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+        tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
+
+- job:
+    name: k8sapp-sriov-fec-operator-tox-metadata
+    parent: tox
+    description: |
+      Run metadata test for k8sapp_sriov_fec_operator
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/update
+      - starlingx/utilities
+      - starlingx/root
+    nodeset: debian-bullseye
+    files:
+      - python3-k8sapp-sriov-fec-operator/*
+    vars:
+      tox_envlist: metadata
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
 
 - job:
     name: k8sapp-sriov-fec-operator-tox-pylint
@@ -39,9 +62,30 @@
       - starlingx/fault
       - starlingx/update
       - starlingx/utilities
+      - starlingx/root
     nodeset: debian-bullseye
     files:
       - python3-k8sapp-sriov-fec-operator/*
     vars:
       tox_envlist: pylint
       tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
+
+- job:
+    name: k8sapp-sriov-fec-operator-tox-flake8
+    parent: tox
+    description: |
+      Run flake8 test for k8sapp_sriov_fec_operator
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/update
+      - starlingx/utilities
+      - starlingx/root
+    nodeset: debian-bullseye
+    files:
+      - python3-k8sapp-sriov-fec-operator/*
+    vars:
+      tox_envlist: flake8
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'

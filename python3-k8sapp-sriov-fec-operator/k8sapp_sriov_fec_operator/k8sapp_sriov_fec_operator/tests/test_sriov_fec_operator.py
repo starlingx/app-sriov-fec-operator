@@ -19,6 +19,7 @@ class SriovFecOperatorTestCase(test_plugins.K8SAppSriovFecOperatorAppMixin,
         self.app = dbutils.create_test_app(name='sriov-fec-operator')
         self.dbapi = dbapi.get_instance()
 
+
 class SriovFecOperatorTestCaseDummy(SriovFecOperatorTestCase, dbbase.ProvisionedControllerHostTestCase):
     # without a test zuul will fail
     def test_dummy(self):
