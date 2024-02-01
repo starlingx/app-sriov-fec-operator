@@ -45,8 +45,6 @@
       - starlingx/utilities
       - starlingx/root
     nodeset: debian-bullseye
-    files:
-      - python3-k8sapp-sriov-fec-operator/*
     vars:
       tox_envlist: metadata
       tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
