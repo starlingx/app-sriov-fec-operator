@@ -8,13 +8,13 @@ imagePullSecrets: [{"name": "default-registry-key"}]
 
 images:
   tags:
-    sriov-fec-labeler: starlingx/sriov-fec-labeler:stx.9.0-v2.7.1
-    sriov-fec-daemon: starlingx/sriov-fec-daemon:stx.9.0-v2.7.1
+    sriov-fec-labeler: starlingx/sriov-fec-labeler:stx.10.0-v2.8.0
+    sriov-fec-daemon: starlingx/sriov-fec-daemon:stx.10.0-v2.8.0
 
 manager:
   image:
     repository: docker.io/starlingx/sriov-fec-operator
-    tag: stx.9.0-v2.7.1
+    tag: stx.10.0-v2.8.0
 
 kubeRbacProxy:
   name: kube-rbac-proxy
