@@ -1,5 +1,5 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: python3-k8sapp-sriov-fec-operator
+Upstream-Name: sriov-fec-operator-helm
 Source: https://opendev.org/starlingx/app-sriov-fec-operator/
 
 Files: *

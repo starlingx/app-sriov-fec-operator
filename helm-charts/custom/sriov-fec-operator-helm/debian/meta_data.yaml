@@ -1,0 +1,14 @@
+---
+debname: sriov-fec-operator-helm
+debver: 1.0-5
+src_path: sriov-fec-operator-helm
+src_files:
+  - sriov-fec-operator-helm/Makefile
+  - sriov-fec-operator-helm/sriov-fec-operator/templates/
+  - sriov-fec-operator-helm/sriov-fec-operator/Chart.yaml
+  - sriov-fec-operator-helm/sriov-fec-operator/values.yaml
+revision:
+  dist: $STX_DIST
+  GITREVCOUNT:
+    SRC_DIR: ${MY_REPO}/stx/app-sriov-fec-operator
+    BASE_SRCREV: 46a85804ca045e00ce0778d94f9bb4d3faa3f6cd

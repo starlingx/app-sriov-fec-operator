@@ -1,0 +1,33 @@
+# Copyright (c) 2022-2024 Intel Corporation
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: "helm.toolkit.fluxcd.io/v2beta1"
+kind: HelmRelease
+metadata:
+  name: sriov-fec-operator
+  labels:
+    chart_group: sriov-fec-operator
+spec:
+  releaseName: sriov-fec-operator
+  chart:
+    spec:
+      chart: sriov-fec-operator
+      version: REPLACE_HELM_CHART_VERSION
+      sourceRef:
+        kind: HelmRepository
+        name: stx-platform
+  interval: 1m
+  timeout: 30m
+  test:
+    enable: false
+  install:
+    disableHooks: false
+  upgrade:
+    disableHooks: false
+  valuesFrom:
+    - kind: Secret
+      name: sriov-fec-operator-static-overrides
+      valuesKey: sriov-fec-operator-static-overrides.yaml
+    - kind: Secret
+      name: sriov-fec-operator-system-overrides
+      valuesKey: sriov-fec-operator-system-overrides.yaml

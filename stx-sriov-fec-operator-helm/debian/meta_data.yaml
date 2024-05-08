@@ -1,9 +1,0 @@
----
-debname: stx-sriov-fec-operator-helm
-debver: 1.0-4
-src_path: stx-sriov-fec-operator-helm
-revision:
-  dist: $STX_DIST
-  GITREVCOUNT:
-    SRC_DIR: ${MY_REPO}/stx/app-sriov-fec-operator
-    BASE_SRCREV: 46a85804ca045e00ce0778d94f9bb4d3faa3f6cd

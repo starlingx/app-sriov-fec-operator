@@ -1,8 +1,5 @@
-#
-# Copyright (c) 2022-2023 Intel Corporation
-#
+# Copyright (c) 2022-2024 Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
-#
 
 import setuptools
 
