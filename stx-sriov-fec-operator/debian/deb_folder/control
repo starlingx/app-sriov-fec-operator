@@ -14,6 +14,8 @@ Standards-Version: 4.5.1
 Homepage: https://www.starlingx.io
 
 Package: stx-sriov-fec-operator
+Replaces: stx-sriov-fec-operator-helm
+Conflicts: stx-sriov-fec-operator-helm
 Section: libs
 Architecture: any
 Depends: ${misc:Depends}
