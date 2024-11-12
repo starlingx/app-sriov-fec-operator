@@ -1,0 +1,51 @@
+From 6a143b24b9cf4626f1dde53bab9876d9b1823515 Mon Sep 17 00:00:00 2001
+From: Thiago Miranda <tmarques@windriver.com>
+Date: Tue, 12 Nov 2024 15:02:30 -0300
+Subject: [PATCH] Customization for readiness and liveness values
+
+Signed-off-by: Thiago Antonio Miranda <tmarques@windriver.com>
+---
+ assets/300-daemon.yaml | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/assets/300-daemon.yaml b/assets/300-daemon.yaml
+index 03dc090..74f6967 100644
+--- a/assets/300-daemon.yaml
++++ b/assets/300-daemon.yaml
+@@ -196,14 +196,20 @@ data:
+               httpGet:
+                 path: /healthz
+                 port: 8081
+-              initialDelaySeconds: 15
+-              periodSeconds: 20
++              initialDelaySeconds: {{ .SRIOV_FEC_DAEMON_LIVENESS_INITIAL_DELAY_SECONDS }}
++              periodSeconds: {{ .SRIOV_FEC_DAEMON_LIVENESS_PERIOD_SECONDS }}
++              failureThreshold: {{ .SRIOV_FEC_DAEMON_LIVENESS_FAILURE_THRESHOLD }}
++              successThreshold: {{ .SRIOV_FEC_DAEMON_LIVENESS_SUCCESS_THRESHOLD }}
++              timeoutSeconds: {{ .SRIOV_FEC_DAEMON_LIVENESS_TIMEOUT_SECONDS }}
+             readinessProbe:
+               httpGet:
+                 path: /readyz
+                 port: 8081
+-              initialDelaySeconds: 5
+-              periodSeconds: 10
++              initialDelaySeconds: {{ .SRIOV_FEC_DAEMON_READINESS_INITIAL_DELAY_SECONDS }}
++              periodSeconds: {{ .SRIOV_FEC_DAEMON_READINESS_PERIOD_SECONDS }}
++              failureThreshold: {{ .SRIOV_FEC_DAEMON_READINESS_FAILURE_THRESHOLD }}
++              successThreshold: {{ .SRIOV_FEC_DAEMON_READINESS_SUCCESS_THRESHOLD }}
++              timeoutSeconds: {{ .SRIOV_FEC_DAEMON_READINESS_TIMEOUT_SECONDS }}
+             ports:
+             - containerPort: 8080
+               name: bbdevconfig
+@@ -245,6 +251,8 @@ data:
+                 value: "90"
+               - name: LEASE_DURATION_SECONDS
+                 value: "600"
++              - name: SRIOV_FEC_METRIC_GATHER_INTERVAL
++                value: {{ .SRIOV_FEC_METRIC_GATHER_INTERVAL }}
+             securityContext:
+               readOnlyRootFilesystem: true
+               privileged: true
+-- 
+2.34.1
+

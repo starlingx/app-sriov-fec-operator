@@ -43,6 +43,48 @@ spec:
           value: {{.Values.env.SRIOV_FEC_LABELER_IMAGE}}
         - name: SRIOV_FEC_NETWORK_DEVICE_PLUGIN_IMAGE
           value: {{.Values.env.SRIOV_FEC_NETWORK_DEVICE_PLUGIN_IMAGE}}
+        - name: SRIOV_FEC_METRIC_GATHER_INTERVAL
+          value: "{{.Values.env.SRIOV_FEC_METRIC_GATHER_INTERVAL}}"
+        - name: SRIOV_FEC_DAEMON_LIVENESS_INITIAL_DELAY_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_LIVENESS_INITIAL_DELAY_SECONDS}}"
+        - name: SRIOV_FEC_DAEMON_LIVENESS_PERIOD_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_LIVENESS_PERIOD_SECONDS}}"
+        - name: SRIOV_FEC_DAEMON_LIVENESS_FAILURE_THRESHOLD
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_LIVENESS_FAILURE_THRESHOLD}}"
+        - name: SRIOV_FEC_DAEMON_LIVENESS_SUCCESS_THRESHOLD
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_LIVENESS_SUCCESS_THRESHOLD}}"
+        - name: SRIOV_FEC_DAEMON_LIVENESS_TIMEOUT_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_LIVENESS_TIMEOUT_SECONDS}}"
+        - name: SRIOV_FEC_DAEMON_READINESS_INITIAL_DELAY_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_READINESS_INITIAL_DELAY_SECONDS}}"
+        - name: SRIOV_FEC_DAEMON_READINESS_PERIOD_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_READINESS_PERIOD_SECONDS}}"
+        - name: SRIOV_FEC_DAEMON_READINESS_FAILURE_THRESHOLD
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_READINESS_FAILURE_THRESHOLD}}"
+        - name: SRIOV_FEC_DAEMON_READINESS_SUCCESS_THRESHOLD
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_READINESS_SUCCESS_THRESHOLD}}"
+        - name: SRIOV_FEC_DAEMON_READINESS_TIMEOUT_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_DAEMON_READINESS_TIMEOUT_SECONDS}}"
+        - name: SRIOV_FEC_MANAGER_LIVENESS_INITIAL_DELAY_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_INITIAL_DELAY_SECONDS}}"
+        - name: SRIOV_FEC_MANAGER_LIVENESS_PERIOD_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_PERIOD_SECONDS}}"
+        - name: SRIOV_FEC_MANAGER_LIVENESS_FAILURE_THRESHOLD
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_FAILURE_THRESHOLD}}"
+        - name: SRIOV_FEC_MANAGER_LIVENESS_SUCCESS_THRESHOLD
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_SUCCESS_THRESHOLD}}"
+        - name: SRIOV_FEC_MANAGER_LIVENESS_TIMEOUT_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_TIMEOUT_SECONDS}}"
+        - name: SRIOV_FEC_MANAGER_READINESS_INITIAL_DELAY_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_INITIAL_DELAY_SECONDS}}"
+        - name: SRIOV_FEC_MANAGER_READINESS_PERIOD_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_PERIOD_SECONDS}}"
+        - name: SRIOV_FEC_MANAGER_READINESS_FAILURE_THRESHOLD
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_FAILURE_THRESHOLD}}"
+        - name: SRIOV_FEC_MANAGER_READINESS_SUCCESS_THRESHOLD
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_SUCCESS_THRESHOLD}}"
+        - name: SRIOV_FEC_MANAGER_READINESS_TIMEOUT_SECONDS
+          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_TIMEOUT_SECONDS}}"
         - name: SRIOV_FEC_NAMESPACE
           valueFrom:
             fieldRef:
@@ -61,8 +103,11 @@ spec:
           httpGet:
             path: /healthz
             port: 8081
-          initialDelaySeconds: 15
-          periodSeconds: 20
+          initialDelaySeconds: {{ .Values.env.SRIOV_FEC_MANAGER_LIVENESS_INITIAL_DELAY_SECONDS }}
+          periodSeconds: {{ .Values.env.SRIOV_FEC_MANAGER_LIVENESS_PERIOD_SECONDS }}
+          failureThreshold: {{ .Values.env.SRIOV_FEC_MANAGER_LIVENESS_FAILURE_THRESHOLD }}
+          successThreshold: {{ .Values.env.SRIOV_FEC_MANAGER_LIVENESS_SUCCESS_THRESHOLD }}
+          timeoutSeconds: {{ .Values.env.SRIOV_FEC_MANAGER_LIVENESS_TIMEOUT_SECONDS }}
         image: "{{ .Values.manager.image.repository}}:{{ .Values.manager.image.tag}}"
         name: manager
         ports:
@@ -73,8 +118,11 @@ spec:
           httpGet:
             path: /readyz
             port: 8081
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          initialDelaySeconds: {{ .Values.env.SRIOV_FEC_MANAGER_READINESS_INITIAL_DELAY_SECONDS }}
+          periodSeconds: {{ .Values.env.SRIOV_FEC_MANAGER_READINESS_PERIOD_SECONDS }}
+          failureThreshold: {{ .Values.env.SRIOV_FEC_MANAGER_READINESS_FAILURE_THRESHOLD }}
+          successThreshold: {{ .Values.env.SRIOV_FEC_MANAGER_READINESS_SUCCESS_THRESHOLD }}
+          timeoutSeconds: {{ .Values.env.SRIOV_FEC_MANAGER_READINESS_TIMEOUT_SECONDS }}
         resources:
           limits:
             cpu: 200m
