@@ -3,7 +3,7 @@ Upstream-Name: python3-k8sapp-sriov-fec-operator
 Source: https://opendev.org/starlingx/app-sriov-fec-operator/
 
 Files: *
-Copyright: (c) 2022-2024 Intel Corporation
+Copyright: (c) 2022-2025 Intel Corporation
 License: Apache-2
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ License: Apache-2
 # If you want to use GPL v2 or later for the /debian/* files use
 # the following clauses, or change it to suit. Delete these two lines
 Files: debian/*
-Copyright: 2022-2024 Intel Corporation
+Copyright: 2022-2025 Intel Corporation
 License: Apache-2
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.

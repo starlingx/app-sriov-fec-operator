@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Intel Corporation
+# Copyright (c) 2022-2025 Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
 
 imagePullSecrets: [{"name": "default-registry-key"}]
@@ -21,7 +21,7 @@ kubeRbacProxy:
 
 sriovNetworkDevicePlugin:
   image:
-    digest: "039e833ca400f79a53aa14534ea2b68e247d39e3d0708f098c540af017bdbc63"
+    digest: "93e856dde88abb0aeb8e0b991e5f6d9f41884d8beea792f4d70cda06f18e783f"
     repository: ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin
-    tag: v3.6.2
+    tag: v3.7.0
     pullPolicy: IfNotPresent

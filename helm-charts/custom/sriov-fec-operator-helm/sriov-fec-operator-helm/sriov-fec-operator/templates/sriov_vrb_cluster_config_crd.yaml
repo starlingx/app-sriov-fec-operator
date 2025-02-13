@@ -384,6 +384,10 @@ spec:
               priority:
                 description: Higher priority policies can override lower ones.
                 type: integer
+              vrbResourceName:
+                description: Indicates custom resource name for sriov-device-plugin
+                pattern: ^[a-zA-Z0-9-_]+$
+                type: string
             required:
             - physicalFunction
             type: object

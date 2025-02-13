@@ -14,6 +14,7 @@ kubeRbacProxy:
     tag: v0.15.0
 
 env:
+  SRIOV_FEC_NAMESPACE: "sriov-fec-system"
   SRIOV_FEC_LTE_RESOURCE_NAME: ""
   SRIOV_FEC_5G_RESOURCE_NAME: ""
   SRIOV_FEC_ACC100_RESOURCE_NAME: ""
@@ -41,7 +42,7 @@ env:
   SRIOV_FEC_MANAGER_READINESS_FAILURE_THRESHOLD: "3"
   SRIOV_FEC_MANAGER_READINESS_SUCCESS_THRESHOLD: "1"
   SRIOV_FEC_MANAGER_READINESS_TIMEOUT_SECONDS: "5"
-  SRIOV_FEC_METRIC_GATHER_INTERVAL: "15s"
+  SRIOV_FEC_METRIC_GATHER_INTERVAL: "0s"
   SRIOV_FEC_LABELER_IMAGE: "registry.local:9001/docker.io/starlingx/sriov-fec-labeler:stx.10.0-v2.9.0-1"
   SRIOV_FEC_NETWORK_DEVICE_PLUGIN_IMAGE: "registry.local:9001/ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin:v3.6.2"
   KUBE_RBAC_PROXY_IMAGE: "registry.local:9001/gcr.io/kubebuilder/kube-rbac-proxy:v0.15.0"

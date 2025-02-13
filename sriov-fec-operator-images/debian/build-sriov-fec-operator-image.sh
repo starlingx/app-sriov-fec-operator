@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2023 Intel Corporation
+# Copyright (c) 2022-2025 Intel Corporation
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -26,6 +26,10 @@ build_labeler_image() {
 
     pwd
     make image-sriov-fec-labeler
+    if [ $? -ne 0 ]; then
+        echo "Operator labeler image build failed"
+        exit 1
+    fi
 
     echo "Labeler image build done"
 
@@ -39,6 +43,10 @@ build_daemon_image() {
 
     pwd
     make image-sriov-fec-daemon
+    if [ $? -ne 0 ]; then
+        echo "Operator daemon image build failed"
+        exit 1
+    fi
 
     echo "Daemon image build done"
 
@@ -53,6 +61,10 @@ build_operator_image() {
 
     pwd
     make image-sriov-fec-operator
+    if [ $? -ne 0 ]; then
+        echo "Operator manager image build failed"
+        exit 1
+    fi
 
     echo "Operator image build done"
 

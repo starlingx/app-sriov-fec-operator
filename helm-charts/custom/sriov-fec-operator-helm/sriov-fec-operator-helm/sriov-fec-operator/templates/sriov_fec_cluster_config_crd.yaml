@@ -770,7 +770,6 @@ spec:
                             type: object
                         required:
                         - downlink
-                        - flrTimeout
                         - networkType
                         - uplink
                         type: object

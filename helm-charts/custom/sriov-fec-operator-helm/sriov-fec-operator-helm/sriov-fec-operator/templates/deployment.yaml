@@ -65,26 +65,6 @@ spec:
           value: "{{.Values.env.SRIOV_FEC_DAEMON_READINESS_SUCCESS_THRESHOLD}}"
         - name: SRIOV_FEC_DAEMON_READINESS_TIMEOUT_SECONDS
           value: "{{.Values.env.SRIOV_FEC_DAEMON_READINESS_TIMEOUT_SECONDS}}"
-        - name: SRIOV_FEC_MANAGER_LIVENESS_INITIAL_DELAY_SECONDS
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_INITIAL_DELAY_SECONDS}}"
-        - name: SRIOV_FEC_MANAGER_LIVENESS_PERIOD_SECONDS
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_PERIOD_SECONDS}}"
-        - name: SRIOV_FEC_MANAGER_LIVENESS_FAILURE_THRESHOLD
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_FAILURE_THRESHOLD}}"
-        - name: SRIOV_FEC_MANAGER_LIVENESS_SUCCESS_THRESHOLD
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_SUCCESS_THRESHOLD}}"
-        - name: SRIOV_FEC_MANAGER_LIVENESS_TIMEOUT_SECONDS
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_LIVENESS_TIMEOUT_SECONDS}}"
-        - name: SRIOV_FEC_MANAGER_READINESS_INITIAL_DELAY_SECONDS
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_INITIAL_DELAY_SECONDS}}"
-        - name: SRIOV_FEC_MANAGER_READINESS_PERIOD_SECONDS
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_PERIOD_SECONDS}}"
-        - name: SRIOV_FEC_MANAGER_READINESS_FAILURE_THRESHOLD
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_FAILURE_THRESHOLD}}"
-        - name: SRIOV_FEC_MANAGER_READINESS_SUCCESS_THRESHOLD
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_SUCCESS_THRESHOLD}}"
-        - name: SRIOV_FEC_MANAGER_READINESS_TIMEOUT_SECONDS
-          value: "{{.Values.env.SRIOV_FEC_MANAGER_READINESS_TIMEOUT_SECONDS}}"
         - name: SRIOV_FEC_NAMESPACE
           valueFrom:
             fieldRef:
@@ -138,6 +118,9 @@ spec:
         - mountPath: /tmp/k8s-webhook-server/serving-certs
           name: cert
           readOnly: true
+        - name: daemon-assets
+          mountPath: /assets/300-daemon.yaml
+          subPath: daemon-assets.yaml
       - args:
         - --secure-listen-address=0.0.0.0:8443
         - --upstream=http://127.0.0.1:8080/
@@ -173,3 +156,7 @@ spec:
         secret:
           defaultMode: 420
           secretName: webhook-server-cert
+      - name: daemon-assets
+        configMap:
+          defaultMode: 420
+          name: sriov-fec-daemon-assets

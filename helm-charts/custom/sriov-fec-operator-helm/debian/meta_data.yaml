@@ -1,6 +1,6 @@
 ---
 debname: sriov-fec-operator-helm
-debver: 1.0-5
+debver: 1.0-6
 src_path: sriov-fec-operator-helm
 src_files:
   - sriov-fec-operator-helm/Makefile

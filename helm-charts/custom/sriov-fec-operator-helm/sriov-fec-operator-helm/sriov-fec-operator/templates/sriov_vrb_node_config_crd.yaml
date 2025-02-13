@@ -364,12 +364,17 @@ spec:
                     vfDriver:
                       description: VFDriver to bound the VFs to
                       type: string
+                    vrbResourceName:
+                      description: VrbResourceName is optional for custom resource
+                        name for sriov-device-plugin
+                      type: string
                   required:
                   - bbDevConfig
                   - pciAddress
                   - pfDriver
                   - vfAmount
                   - vfDriver
+                  - vrbResourceName
                   type: object
                 type: array
             required:

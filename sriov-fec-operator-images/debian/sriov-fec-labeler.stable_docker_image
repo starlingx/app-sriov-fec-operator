@@ -1,10 +1,8 @@
 BUILDER=script
 LABEL=sriov-fec-labeler
 SOURCE_REPO=https://github.com/intel/sriov-fec-operator.git
-SOURCE_REF=471f355304105ecf7f558dd5dab7a7123064e4de
-SOURCE_PATCHES="../files/0001-Add-image-pull-secrets-for-stx-builds.patch \
-                ../files/0002-kmod-version-fix.patch \
-                ../files/0003-Customization-for-readiness-and-liveness-values.patch"
+SOURCE_REF=0b655a922c155479884702b004c0e1a94c93db73
+SOURCE_PATCHES="../files/0001-Add-image-pull-secrets-for-stx-builds.patch"
 COMMAND=bash
 SCRIPT=build-sriov-fec-operator-image.sh
 ARGS=labeler
