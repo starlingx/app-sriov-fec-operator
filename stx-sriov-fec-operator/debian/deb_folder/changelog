@@ -1,3 +1,10 @@
+stx-sriov-fec-operator (1.0-7) unstable; urgency=medium
+
+  * Upversion sriov-fec-operator v2.11.1.
+  * Fix for dual accelerator configiuration issue.
+
+ --  Balendu Mouli Burla <balendu.burla@intel.com>  Tue, 18 Mar 2025 13:05:00 +0000
+
 stx-sriov-fec-operator (1.0-6) unstable; urgency=medium
 
   * Upversion sriov-fec-operator v2.11.0.
