@@ -10,7 +10,7 @@ manager:
 kubeRbacProxy:
   name: kube-rbac-proxy
   image:
-    repository: gcr.io/kubebuilder/kube-rbac-proxy
+    repository: registry.k8s.io/kubebuilder/kube-rbac-proxy
     tag: v0.15.0
 
 env:
@@ -45,4 +45,4 @@ env:
   SRIOV_FEC_METRIC_GATHER_INTERVAL: "0s"
   SRIOV_FEC_LABELER_IMAGE: "registry.local:9001/docker.io/starlingx/sriov-fec-labeler:stx.11.0-v2.11.1"
   SRIOV_FEC_NETWORK_DEVICE_PLUGIN_IMAGE: "registry.local:9001/ghcr.io/k8snetworkplumbingwg/sriov-network-device-plugin:v3.7.0"
-  KUBE_RBAC_PROXY_IMAGE: "registry.local:9001/gcr.io/kubebuilder/kube-rbac-proxy:v0.15.0"
+  KUBE_RBAC_PROXY_IMAGE: "registry.local:9001/registry.k8s.io/kubebuilder/kube-rbac-proxy:v0.15.0"

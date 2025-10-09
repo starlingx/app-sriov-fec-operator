@@ -1,6 +1,6 @@
 ---
 debname: python3-k8sapp-sriov-fec-operator
-debver: 1.0-6
+debver: 1.0-8
 src_path: k8sapp_sriov_fec_operator
 revision:
   dist: $STX_DIST

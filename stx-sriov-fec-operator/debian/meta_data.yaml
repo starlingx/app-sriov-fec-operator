@@ -1,6 +1,6 @@
 ---
 debname: stx-sriov-fec-operator
-debver: 1.0-6
+debver: 1.0-8
 src_path: stx-sriov-fec-operator
 revision:
   dist: $STX_DIST
