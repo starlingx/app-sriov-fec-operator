@@ -1,0 +1,33 @@
+From b9b90fdb5ba1c2f073ed9979e49d969b0fd60df9 Mon Sep 17 00:00:00 2001
+From: Davlet Panech <davlet.panech@windriver.com>
+Date: Thu, 20 Nov 2025 10:15:34 -0500
+Subject: [PATCH] SCSY-212149 Update kmod package version
+
+kmod package version set to 28.11
+
+Adapted from 0004-SCSY-212149-Update-kmod-package-version.patch
+in https://opendev.org/starlingx/app-sriov-fec-operator
+revision 19ae385d7183efa1e82dfc0db2d2bdb3f531eca5
+
+Signed-off-by: Davlet Panech <davlet.panech@windriver.com>
+Co-authored-by: Balendu Mouli Burla <balendu.burla@intel.com>
+---
+ Dockerfile.daemon | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Dockerfile.daemon b/Dockerfile.daemon
+index c7b1e67..4710ad1 100644
+--- a/Dockerfile.daemon
++++ b/Dockerfile.daemon
+@@ -26,7 +26,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o sriov_fe
+ FROM registry.access.redhat.com/ubi9/ubi:9.4-947 AS package_installer
+ 
+ RUN yum install \
+-	kmod-28-10.el9 \
++	kmod-28-11.el9 \
+ 	pciutils-3.7.0-7.el9 \
+ 	procps-ng-3.3.17-14.el9 \
+ 	--releasever 9 --setopt install_weak_deps=false --nodocs -y && \
+-- 
+2.34.1
+

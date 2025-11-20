@@ -5,7 +5,8 @@ SOURCE_REF=471f355304105ecf7f558dd5dab7a7123064e4de
 SOURCE_PATCHES="../files/0001-Add-image-pull-secrets-for-stx-builds.patch \
                 ../files/0002-kmod-version-fix.patch \
                 ../files/0003-Customization-for-readiness-and-liveness-values.patch \
-                ../files/0003-SCSY-211052-Update-pciutils-version.patch"
+                ../files/0003-SCSY-211052-Update-pciutils-version.patch \
+                ../files/0004-SCSY-212149-Update-kmod-package-version.patch"
 COMMAND=bash
 SCRIPT=build-sriov-fec-operator-image.sh
 ARGS=labeler
