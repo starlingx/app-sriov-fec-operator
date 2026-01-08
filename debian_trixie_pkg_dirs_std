@@ -1,0 +1,3 @@
+helm-charts/custom/sriov-fec-operator-helm
+python3-k8sapp-sriov-fec-operator
+stx-sriov-fec-operator
