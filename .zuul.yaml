@@ -7,6 +7,13 @@
         - k8sapp-sriov-fec-operator-tox-pylint
         - k8sapp-sriov-fec-operator-tox-flake8
         - k8sapp-sriov-fec-operator-tox-metadata
+        - k8sapp-sriov-fec-operator-tox-coverage
+        - k8sapp-sriov-fec-operator-tox-security
+        - k8sapp-sriov-fec-operator-tox-py313
+        - k8sapp-sriov-fec-operator-tox-coverage-trixie
+        - k8sapp-sriov-fec-operator-tox-security-trixie
+        - k8sapp-sriov-fec-operator-tox-flake8-trixie
+        - k8sapp-sriov-fec-operator-tox-pylint-trixie
     gate:
       jobs:
         - openstack-tox-linters
@@ -14,6 +21,13 @@
         - k8sapp-sriov-fec-operator-tox-pylint
         - k8sapp-sriov-fec-operator-tox-flake8
         - k8sapp-sriov-fec-operator-tox-metadata
+        - k8sapp-sriov-fec-operator-tox-coverage
+        - k8sapp-sriov-fec-operator-tox-security
+        - k8sapp-sriov-fec-operator-tox-py313
+        - k8sapp-sriov-fec-operator-tox-coverage-trixie
+        - k8sapp-sriov-fec-operator-tox-security-trixie
+        - k8sapp-sriov-fec-operator-tox-flake8-trixie
+        - k8sapp-sriov-fec-operator-tox-pylint-trixie
 
     post:
       jobs:
@@ -35,6 +49,24 @@
     vars:
         tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
         tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
+
+- job:
+    name: k8sapp-sriov-fec-operator-tox-py313
+    parent: tox
+    description: |
+      Run py313 for sriov-fec-operator app
+    nodeset: debian-trixie-8GB
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/utilities
+      - starlingx/root
+    files:
+      - python3-k8sapp-sriov-fec-operator/*
+    vars:
+      tox_envlist: py313
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/trixie/upper-constraints.txt'
 
 - job:
     name: k8sapp-sriov-fec-operator-tox-metadata
@@ -179,3 +211,115 @@
           /B9542+gY9hPX7CSp1B+PKX6wRmjcUeElfjVdGywvf5xFVovxrFwa0/JxSp7/PdT3NqSW
           Moz2Fxw3DbsfpeJ9RyutBfFAvjKQj4tLkAZtaMotBFubHu2siKNytScw80Urfj1+ztWtR
           MT5lNREe4lWaPe1eqeybxys1AXdCY7p7WOeodX8O1zoV6hBAJ5KhotA2cBP/HU=
+
+- job:
+    name: k8sapp-sriov-fec-operator-tox-coverage
+    parent: tox
+    description: |
+      Run coverage analysis for k8sapp_sriov_fec_operator
+    nodeset: debian-bullseye
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/utilities
+      - starlingx/root
+    files:
+      - python3-k8sapp-sriov-fec-operator/*
+    vars:
+      tox_envlist: coverage
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
+    post-run: playbooks/upload-coverage-reports.yaml
+
+- job:
+    name: k8sapp-sriov-fec-operator-tox-security
+    parent: tox
+    description: |
+      Run security analysis for k8sapp_sriov_fec_operator
+    nodeset: debian-bullseye
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/utilities
+      - starlingx/root
+    files:
+      - python3-k8sapp-sriov-fec-operator/*
+    vars:
+      tox_envlist: security
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/upper-constraints.txt'
+    post-run: playbooks/upload-security-reports.yaml
+
+- job:
+    name: k8sapp-sriov-fec-operator-tox-coverage-trixie
+    parent: tox
+    description: |
+      Run coverage analysis for k8sapp_sriov_fec_operator (Trixie)
+    nodeset: debian-trixie-8GB
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/utilities
+      - starlingx/root
+    files:
+      - python3-k8sapp-sriov-fec-operator/*
+    vars:
+      tox_envlist: coverage-trixie
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/trixie/upper-constraints.txt'
+    post-run: playbooks/upload-coverage-reports.yaml
+
+- job:
+    name: k8sapp-sriov-fec-operator-tox-security-trixie
+    parent: tox
+    description: |
+      Run security analysis for k8sapp_sriov_fec_operator (Trixie)
+    nodeset: debian-trixie-8GB
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/utilities
+      - starlingx/root
+    files:
+      - python3-k8sapp-sriov-fec-operator/*
+    vars:
+      tox_envlist: security-trixie
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/trixie/upper-constraints.txt'
+    post-run: playbooks/upload-security-reports.yaml
+
+- job:
+    name: k8sapp-sriov-fec-operator-tox-flake8-trixie
+    parent: tox
+    description: |
+      Run flake8 test for k8sapp_sriov_fec_operator (Trixie)
+    nodeset: debian-trixie-8GB
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/utilities
+      - starlingx/root
+    files:
+      - python3-k8sapp-sriov-fec-operator/*
+    vars:
+      tox_envlist: flake8-trixie
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/trixie/upper-constraints.txt'
+
+- job:
+    name: k8sapp-sriov-fec-operator-tox-pylint-trixie
+    parent: tox
+    description: |
+      Run pylint test for k8sapp_sriov_fec_operator (Trixie)
+    nodeset: debian-trixie-8GB
+    required-projects:
+      - starlingx/config
+      - starlingx/fault
+      - starlingx/utilities
+      - starlingx/root
+    files:
+      - python3-k8sapp-sriov-fec-operator/*
+    vars:
+      tox_envlist: pylint-trixie
+      tox_extra_args: -c python3-k8sapp-sriov-fec-operator/k8sapp_sriov_fec_operator/tox.ini
+      tox_constraints_file: '{{ ansible_user_dir }}/src/opendev.org/starlingx/root/build-tools/requirements/debian/trixie/upper-constraints.txt'
