@@ -1,0 +1,34 @@
+From 15b44c4d1c176f27a4c97950fe8fd9a28d5aa47c Mon Sep 17 00:00:00 2001
+From: Balendu Mouli Burla <balendu.burla@intel.com>
+Date: Mon, 16 Nov 2026 17:53:22 +0000
+Subject: [PATCH] SCSY-213932 Fix for daemon image build failure
+
+Update the pciutils-3.7.0-7.el9 procps-ng-3.3.17-14
+
+to
+
+pciutils-3.7.0-8.el9 procps-ng-3.3.17-15
+
+Signed-off-by: Balendu Mouli Burla <balendu.burla@intel.com>
+---
+ Dockerfile.daemon | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Dockerfile.daemon b/Dockerfile.daemon
+index 6d9fd17..8258a89 100644
+--- a/Dockerfile.daemon
++++ b/Dockerfile.daemon
+@@ -27,8 +27,8 @@ FROM registry.access.redhat.com/ubi9/ubi:9.5-1736404036 AS package_installer
+ 
+ RUN yum install \
+ 	kmod-28-11.el9 \
+-	pciutils-3.7.0-7.el9 \
+-	procps-ng-3.3.17-14.el9 \
++	pciutils-3.7.0-8.el9 \
++	procps-ng-3.3.17-15.el9 \
+ 	--releasever 9 --setopt install_weak_deps=false --nodocs -y && \
+ 	yum clean all
+ 
+-- 
+2.34.1
+
